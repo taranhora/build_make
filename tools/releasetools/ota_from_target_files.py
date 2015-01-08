@@ -215,7 +215,7 @@ OPTIONS.override_device = 'auto'
 
 METADATA_NAME = 'META-INF/com/android/metadata'
 POSTINSTALL_CONFIG = 'META/postinstall_config.txt'
-UNZIP_PATTERN = ['IMAGES/*', 'META/*']
+UNZIP_PATTERN = ['IMAGES/*', 'META/*', 'SYSTEM/build.prop']
 
 
 class BuildInfo(object):
@@ -883,6 +883,9 @@ endif;
   script.SetProgress(1)
   script.AddToZip(input_zip, output_zip, input_path=OPTIONS.updater_binary)
   metadata["ota-required-cache"] = str(script.required_cache)
+
+  common.ZipWriteStr(output_zip, "system/build.prop",
+                     ""+input_zip.read("SYSTEM/build.prop"))
 
   # We haven't written the metadata entry, which will be done in
   # FinalizeMetadata.
@@ -1603,6 +1606,9 @@ endif;
   else:
     script.AddToZip(target_zip, output_zip, input_path=OPTIONS.updater_binary)
   metadata["ota-required-cache"] = str(script.required_cache)
+
+  common.ZipWriteStr(output_zip, "system/build.prop",
+                     ""+target_zip.read("SYSTEM/build.prop"))
 
   # We haven't written the metadata entry yet, which will be handled in
   # FinalizeMetadata().
