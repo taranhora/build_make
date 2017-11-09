@@ -37,6 +37,7 @@ my_soong_problems :=
 # However, there are many instances of the old style dependencies in the
 # source tree.  Fix them up and warn the user.
 ifneq (,$(findstring $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr,$(LOCAL_ADDITIONAL_DEPENDENCIES)))
+  $(warning $(LOCAL_MODULE) uses deprecated kernel header dependency path.)
   LOCAL_ADDITIONAL_DEPENDENCIES := $(patsubst $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr,INSTALLED_KERNEL_HEADERS,$(LOCAL_ADDITIONAL_DEPENDENCIES))
 endif
 
@@ -44,6 +45,7 @@ endif
 # but warn the user.
 ifneq (,$(findstring $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include,$(LOCAL_C_INCLUDES)))
   ifeq (,$(findstring INSTALLED_KERNEL_HEADERS,$(LOCAL_ADDITIONAL_DEPENDENCIES)))
+    $(warning $(LOCAL_MODULE) uses kernel headers, but does not depend on them!)
     LOCAL_ADDITIONAL_DEPENDENCIES += INSTALLED_KERNEL_HEADERS
   endif
 endif
